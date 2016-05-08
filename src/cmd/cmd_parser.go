@@ -1,4 +1,4 @@
-package cpr
+package cmd
 
 import (
 	"flag"

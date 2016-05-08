@@ -1,0 +1,10 @@
+{
+	"directory": "front/vane_components",
+	"timeout": 1200,
+	"dependencies": {
+		"jquery": "^2.2.2",
+	},
+	"devDependencies": {
+		"less": "^2.2.2"
+	}
+}

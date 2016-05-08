@@ -2,7 +2,6 @@ package vane
 
 import (
 	"os"
-	"syscall"
 )
 
 const (
@@ -11,14 +10,18 @@ const (
 	DefaultDirName string      = "vane_components" // default hold directory of installed package.
 )
 
-// DefaultDirIsExist inspect the installation directory exist or not exist.
+// DftDirIsExist inspect the installation directory exist or not exist.
 // The default name is "vane_components".
-func DefaultDirIsExist() bool {
+func DftDirIsExist() bool {
 	_, err := os.Stat(DefaultDirName)
 	return err == nil || os.IsExist(err)
 }
 
-// MkDefDir create the default direatory which name is "vane_components".
-func MkDefDir() error {
-	return os.Mkdir(DefaultDirName, ModeCommonDir)
+// MkDftDir create the default direatory which name is "vane_components".
+func MkDftDir() bool {
+	err := os.Mkdir(DefaultDirName, ModeCommonDir)
+	if err != nil {
+		return false
+	}
+	return true
 }
