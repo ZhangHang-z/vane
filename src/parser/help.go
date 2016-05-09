@@ -1,4 +1,4 @@
-package cmd
+package parser
 
 var HelpString = `
 Usage:

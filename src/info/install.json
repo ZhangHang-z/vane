@@ -1,0 +1,7 @@
+{
+	"usage": "vane uninstall [, args]... [, options]",
+	"example": [
+		"vane uninstall jquery less --save",
+		"vane uninstall jquery less --save-dev"
+	]
+}

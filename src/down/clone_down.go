@@ -3,9 +3,7 @@ package down
 import (
 	"bytes"
 	"log"
-	"os"
 	"os/exec"
-	"path/filepath"
 	"strings"
 )
 
@@ -19,12 +17,4 @@ func GitRepDownloader(src string) bytes.Buffer {
 		log.Fatal("Exectued Command Failed:", err)
 	}
 	return out
-}
-
-func GotoComponentsDir(dirComponents string) {
-	absDir, err := filepath.Abs(dirComponents)
-	if err != nil {
-		log.Fatal(err)
-	}
-	os.Chdir(absDir)
 }

@@ -1,13 +1,9 @@
 package vane
 
 import (
+	"log"
 	"os"
-)
-
-const (
-	ModeCommonDir  os.FileMode = 0775              // unix common user's directory default permission.
-	ModeCommonFile os.FileMode = 0664              // unix common user's file default permission.
-	DefaultDirName string      = "vane_components" // default hold directory of installed package.
+	"path/filepath"
 )
 
 // DftDirIsExist inspect the installation directory exist or not exist.
@@ -24,4 +20,12 @@ func MkDftDir() bool {
 		return false
 	}
 	return true
+}
+
+func GotoComponentsDir(dirComponents string) {
+	absDir, err := filepath.Abs(dirComponents)
+	if err != nil {
+		log.Fatal(err)
+	}
+	os.Chdir(absDir)
 }

@@ -1,4 +1,4 @@
-package cmd
+package parser
 
 import (
 	"flag"
@@ -15,4 +15,7 @@ func init() {
 	flag.StringVar(&ArgI, "i", defaultInstall, "vane -i pkg")
 	flag.StringVar(&ArgInstall, "install", defaultInstall, "vane -install pkg")
 	flag.Parse()
+}
+
+func OPTParser() {
 }
