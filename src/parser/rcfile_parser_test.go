@@ -2,11 +2,11 @@ package parser
 
 import (
 	"fmt"
+	"os"
 	"testing"
 )
 
 func TestOpenRCFile(t *testing.T) {
-	fmt.Println("-----------------")
 	vanerc, err := RsvRCFile("../../")
 	if err != nil {
 		t.Error(err)

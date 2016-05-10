@@ -48,7 +48,7 @@ func RsvRCFile(rcfpath string) (*VaneRC, error) {
 	rcfpath = path.Join(rcfpath, RCFileName)
 	contents, err := OpenRCFile(rcfpath)
 	if err != nil {
-		return nil, ERR_RC_FILE_NOT_FOUND
+		return &VaneRC{}, ERR_RC_FILE_NOT_FOUND
 	}
 	return RsvJSONFromRCFile(contents)
 }
@@ -60,7 +60,9 @@ func MkSavedDirAndIn() error {
 	}
 	vanerc, err := RsvRCFile(cwd)
 	if err != nil {
-		return err
+		if err == ERR_RC_FILE_NOT_FOUND {
+			vanerc.Directory = dir.DefaultDirName
+		}
 	}
 
 	// default package saved directory.
@@ -70,7 +72,6 @@ func MkSavedDirAndIn() error {
 			if err != nil {
 				return errors.New("make default package saved directory <vane_components> failed.")
 			}
-			dir.GotoComponentsDir(dir.DefaultDirName)
 		}
 	}
 
@@ -80,8 +81,8 @@ func MkSavedDirAndIn() error {
 		if err != nil {
 			return err
 		}
-		dir.GotoComponentsDir(dir.DefaultDirName)
 	}
 
+	dir.GotoComponentsDir(dir.DefaultDirName)
 	return nil
 }
