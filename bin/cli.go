@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/ZhangHang-z/vane/src/parser"
+	"os"
 )
 
 /*
@@ -18,7 +19,6 @@ https://github.com/bower/bower/archive/v1.7.5.zip
 // var jquerySRC string = "https://code.jquery.com/jquery-2.2.3.min.js"
 
 func main() {
-	_ = parser.CMDParser()
-	fmt.Println(cmd.ArgI)
-	fmt.Println(cmd.ArgInstall)
+	fmt.Println(os.Args)
+	parser.CMDParser()
 }

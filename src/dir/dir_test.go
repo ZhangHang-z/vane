@@ -1,4 +1,4 @@
-package vane
+package dir
 
 import (
 	"fmt"
@@ -6,14 +6,14 @@ import (
 	"testing"
 )
 
-func TestMkdftDir(t *testing.T) {
-	e := MkDftDir()
+func TestMkSavedDir(t *testing.T) {
+	e := MkSavedDir(DefaultDirName)
 	if e != nil {
 		fmt.Println(e)
 	}
 }
 
-func TestDftDirIsExist(t *testing.T) {
+func TestDirIsExist(t *testing.T) {
 	d, e := os.Getwd()
 	fmt.Println(d)
 	if e != nil {

@@ -9,8 +9,8 @@ Examples:
 	vant install pkgname1 pkgname2 --save
 
 Commands:
-	install			install the packages.
+	install		install the packages.
 
 Options:
-	--save			save the package name into vane.json file.
+	--save		save the package name into vane.json file.
 `

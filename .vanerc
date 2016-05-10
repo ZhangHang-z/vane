@@ -1,4 +1,8 @@
 {
-	directory: "vane_components",
-	"timeout": 1200
+	"directory": "vane_components",
+	"timeout": 1200,
+	"scripts": {
+		"scriptify": "sc",
+		"extra": "ex"
+	}
 }

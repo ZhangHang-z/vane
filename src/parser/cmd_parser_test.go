@@ -5,5 +5,5 @@ import (
 )
 
 func TestCMDParser(t *testing.T) {
-	agrs := CMDParser()
+	CMDParser()
 }
