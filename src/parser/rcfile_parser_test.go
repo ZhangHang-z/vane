@@ -19,4 +19,5 @@ func TestMkSavedDirAndIn(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
+	fmt.Println(os.Getwd())
 }
