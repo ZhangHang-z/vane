@@ -53,6 +53,7 @@ func RsvRCFile(rcfpath string) (*VaneRC, error) {
 	return RsvJSONFromRCFile(contents)
 }
 
+// MkSavedDirAndIn make the package saved directory and in.
 func MkSavedDirAndIn() error {
 	cwd, err := os.Getwd()
 	if err != nil {
