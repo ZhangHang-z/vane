@@ -16,22 +16,22 @@ var (
 	ERR_MK_SAVE_DIR = errors.New("make package saved directory failed.")
 )
 
-// DftDirIsExist inspect the installation directory exist or not exist.
-// The default name is "vane_components".
+// DirIsExist inspect the installation directory exist or not exist.
 func DirIsExist(dirName string) bool {
 	_, err := os.Stat(dirName)
 	return err == nil || os.IsExist(err)
 }
 
-// MkDftDir create the default direatory which name is "vane_components".
+// MkSavedDir create the default direatory which name is "vane_components".
 func MkSavedDir(dirName string) error {
-	err := os.Mkdir(dirName, vane.ModeCommonDir)
+	err := os.MkdirAll(dirName, vane.ModeCommonDir)
 	if err != nil {
 		return ERR_MK_SAVE_DIR
 	}
 	return nil
 }
 
+// GotoComponentsDir go to the package saved directory.
 func GotoComponentsDir(dirComponents string) {
 	absDir, err := filepath.Abs(dirComponents)
 	if err != nil {

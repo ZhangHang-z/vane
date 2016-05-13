@@ -1,3 +1,8 @@
+/*
+	Package parser provied command line parser,
+	parse vane.json file and .vanerc file for user defined.
+
+*/
 package parser
 
 import (

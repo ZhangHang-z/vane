@@ -1,5 +1,5 @@
 {
-	"directory": "vane_components",
+	"directory": "static/javascripts/vane_components",
 	"timeout": 1200,
 	"scripts": {
 		"scriptify": "sc",
