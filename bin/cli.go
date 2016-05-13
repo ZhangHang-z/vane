@@ -20,7 +20,6 @@ https://github.com/bower/bower/archive/v1.7.5.zip
 // var jquerySRC string = "https://code.jquery.com/jquery-2.2.3.min.js"
 
 func main() {
-
 	parser.CMDParser()
 	fmt.Println(os.Args)
 	parser.OPTParser()
