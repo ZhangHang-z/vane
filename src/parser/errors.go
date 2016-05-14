@@ -1,5 +1,9 @@
 package parser
 
+import (
+	"errors"
+)
+
 var (
 	ERR_RC_FILE_NOT_FOUND   = errors.New(".vanerc file not found.")
 	ERR_JSON_FILE_NOT_FOUND = errors.New("vane.json file not found.")
