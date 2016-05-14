@@ -31,8 +31,6 @@ func (ps *Pkgs) Set(value string) error {
 	return nil
 }
 
-var ArgI string
-var ArgInstall string
 var ArgIsOpt bool
 var ArgPkgs Pkgs
 
@@ -49,8 +47,6 @@ func OPTParser() {
 		printHelpString()
 	}
 
-	flag.StringVar(&ArgI, "i", defaultInstall, "vane -i pkg")
-	flag.StringVar(&ArgInstall, "install", defaultInstall, "vane -install pkg")
 	flag.BoolVar(&ArgIsOpt, "save-dev", defaultSave, "--save....")
 	flag.Var(&ArgPkgs, "p", "print....")
 

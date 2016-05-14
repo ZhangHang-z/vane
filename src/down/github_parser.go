@@ -2,7 +2,6 @@ package down
 
 import (
 	"archive/zip"
-	"errors"
 	"fmt"
 	"github.com/ZhangHang-z/vane/src/vane"
 	"io"
@@ -20,16 +19,6 @@ const (
 	TargzSuffix  = ".tar.gz"
 	TagMaster    = "master"
 )
-
-var (
-	ERR_HTTP_NOT_FOUND = errors.New("Package Not Found")
-)
-
-type Package struct {
-	name    string
-	version string
-	source  string
-}
 
 // RsvGitHubAddr resolve github's package download address from raw address.
 // parameter GPAP meaning: GitHub Package Address Protocol, such as "git://github.com/user/package^1.2.1".
@@ -66,12 +55,15 @@ func GetPKGNameAndTag(paths []string) (pkgName, pkgTag string) {
 	if lens > 2 {
 		return paths[0], paths[lens-1]
 	}
-	return "master", ""
+	return paths[0], ""
 }
 
 // RevGithubPKG retrieve package from a given url.
 func RevGithubPKG(url string) ([]byte, error) {
 	res, err := http.Get(url)
+	if err != nil {
+		return nil, err
+	}
 	defer res.Body.Close()
 	if res.StatusCode == 404 {
 		return nil, ERR_HTTP_NOT_FOUND
@@ -151,4 +143,13 @@ func GitHubDownloader(url string) error {
 	}
 
 	return ExtractZip(f)
+}
+
+// IsDomainName inspect url is a domain name or a name of package.
+func IsDomainName(args string) (bool, error) {
+	u, err := url.Parse(args)
+	if err != nil {
+		return false, err
+	}
+	return !(u.Scheme == ""), nil
 }

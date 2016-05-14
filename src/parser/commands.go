@@ -8,6 +8,7 @@ var (
 	AllCommands = map[string]interface{}{
 		"install": down.GitHubDownloader,
 		"help":    HelpString,
+		"info":    "info...",
 	}
 
 	AllOptions = map[string]interface{}{
@@ -15,3 +16,11 @@ var (
 		"--version": "version",
 	}
 )
+
+func IsValidCommand(command string) bool {
+	_, hasAttr := AllCommands[command]
+	if hasAttr {
+		return true
+	}
+	return false
+}
