@@ -2,7 +2,7 @@ package dir
 
 import (
 	"errors"
-	"github.com/ZhangHang-z/vane/src/vane"
+	"github.com/ZhangHang-z/vane/src/util"
 	"log"
 	"os"
 	"path/filepath"
@@ -24,7 +24,7 @@ func DirIsExist(dirName string) bool {
 
 // MkSavedDir create the default direatory which name is "vane_components".
 func MkSavedDir(dirName string) error {
-	err := os.MkdirAll(dirName, vane.ModeCommonDir)
+	err := os.MkdirAll(dirName, util.ModeCommonDir)
 	if err != nil {
 		return ERR_MK_SAVE_DIR
 	}

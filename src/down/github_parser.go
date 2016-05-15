@@ -3,7 +3,8 @@ package down
 import (
 	"archive/zip"
 	"fmt"
-	"github.com/ZhangHang-z/vane/src/vane"
+	vErr "github.com/ZhangHang-z/vane/errors"
+	"github.com/ZhangHang-z/vane/src/util"
 	"io"
 	"io/ioutil"
 	"log"
@@ -66,7 +67,7 @@ func RevGithubPKG(url string) ([]byte, error) {
 	}
 	defer res.Body.Close()
 	if res.StatusCode == 404 {
-		return nil, ERR_HTTP_NOT_FOUND
+		return nil, vErr.ERR_HTTP_NOT_FOUND
 	}
 	if err != nil {
 		return nil, err
@@ -91,7 +92,7 @@ func ExtractZip(f *os.File) error {
 	}
 	for _, exf := range r.File {
 		if exf.FileInfo().IsDir() {
-			err := os.MkdirAll(exf.Name, vane.ModeCommonDir)
+			err := os.MkdirAll(exf.Name, util.ModeCommonDir)
 			if err != nil {
 				fmt.Printf("make directory: <%s> failed", err)
 			}

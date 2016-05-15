@@ -1,8 +1,9 @@
-package parser
+package fileparser
 
 import (
 	"encoding/json"
 	"errors"
+	vErr "github.com/ZhangHang-z/vane/errors"
 	"github.com/ZhangHang-z/vane/src/dir"
 	"io/ioutil"
 	"os"
@@ -32,7 +33,7 @@ func RsvJSONFromRCFile(rawJSONs []byte) (*VaneRC, error) {
 	var vanerc VaneRC
 	err := json.Unmarshal(rawJSONs, &vanerc)
 	if err != nil {
-		return nil, ERR_RC_FILE_CONF
+		return nil, vErr.ERR_RC_FILE_CONF
 	}
 	return &vanerc, nil
 }
@@ -43,7 +44,7 @@ func RsvRCFile(rcfpath string) (*VaneRC, error) {
 	// if .vanerc file not exist. return error ERR_RC_FILE_NOT_FOUND,
 	// return default &VaneRC{}, else resolve json data.
 	if err != nil {
-		return &VaneRC{}, ERR_RC_FILE_NOT_FOUND
+		return &VaneRC{}, vErr.ERR_RC_FILE_NOT_FOUND
 	}
 	return RsvJSONFromRCFile(contents)
 }
@@ -56,7 +57,7 @@ func MkSavedDirAndIn() error {
 	}
 	vanerc, err := RsvRCFile(cwd)
 	if err != nil {
-		if err == ERR_RC_FILE_NOT_FOUND {
+		if err == vErr.ERR_RC_FILE_NOT_FOUND {
 			vanerc.Directory = dir.DefaultDirName
 		}
 	}

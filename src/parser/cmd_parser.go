@@ -8,6 +8,8 @@ import (
 	"fmt"
 	vcmd "github.com/ZhangHang-z/vane/src/commands"
 	"github.com/ZhangHang-z/vane/src/down"
+	fp "github.com/ZhangHang-z/vane/src/fileparser"
+	"github.com/ZhangHang-z/vane/src/util"
 	"io"
 	"os"
 )
@@ -80,9 +82,9 @@ func ExeNoArgsCMD(cmd string) {
 func ExeMultiArgsCMD(cmd string, args []string) {
 	switch cmd {
 	case "install":
-		MkSavedDirAndIn()
+		fp.MkSavedDirAndIn()
 		for _, v := range args {
-			if isDomain, _ := down.IsDomainName(v); isDomain {
+			if isDomain, _ := util.IsDomainName(v); isDomain {
 				url := down.RsvGitHubAddr(v)
 				err := down.GitHubDownloader(url)
 				if err != nil {
