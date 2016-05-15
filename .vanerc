@@ -4,5 +4,6 @@
 	"scripts": {
 		"scriptify": "sc",
 		"extra": "ex"
-	}
+	},
+	"err-to-file": "/tmp/vane.err"
 }

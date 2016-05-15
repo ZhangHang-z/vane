@@ -6,7 +6,9 @@ package parser
 
 import (
 	"fmt"
+	vcmd "github.com/ZhangHang-z/vane/src/commands"
 	"github.com/ZhangHang-z/vane/src/down"
+	"io"
 	"os"
 )
 
@@ -22,7 +24,7 @@ func CMDParser() {
 		fmt.Println(HelpString)
 		return
 	}
-	command := os.Args[1]
+	cd := os.Args[1]
 
 	if !IsValidCommand(command) {
 		fmt.Println(HelpString)
@@ -37,8 +39,22 @@ func CMDParser() {
 		os.Args = os.Args[i:] // lefting os.Args
 		break
 	}
-	ExeCommand(command, cmdArgs)
 	os.Args = append(pwd, os.Args...)
+
+	cdFunc, cdInfo := GetCommand(cd)
+
+	CommandLine.cmd = &Command{
+		cmdFunc:  cdFunc,
+		HelpInfo: cdInfo,
+	}
+	CommandLine.cmdArgs = cmdArgs
+	CommandLine.option = os.Args
+	CommandLine.cmdParsed = true
+	//ExeCommand(cd, cmdArgs)
+}
+
+func GetCommand(name string) (interface{}, string) {
+
 }
 
 func ExeCommand(cmd string, args []string) {
@@ -47,7 +63,6 @@ func ExeCommand(cmd string, args []string) {
 	} else {
 		ExeNoArgsCMD(cmd)
 	}
-	return
 }
 
 func ExeNoArgsCMD(cmd string) {
@@ -85,9 +100,54 @@ func ExeMultiArgsCMD(cmd string, args []string) {
 	return
 }
 
-// ------
-type DomainPackage struct {
-	name    string
-	version string
-	source  string
+type infoCode int
+
+const (
+	helpInfoAll infoCode = iota
+	helpInfoPart
+)
+
+var CommandLine = NewCommandSet(os.Stdout)
+
+func NewCommandSet(out io.Writer) *CommandSet {
+	cmd := &CommandSet{
+		output:   out,
+		HelpInfo: HelpString,
+	}
+	return cmd
+}
+
+type CommandSet struct {
+	cmd            *Command
+	cmdArgs        []string
+	cmdParsed      bool
+	option         string
+	HelpInfo       string
+	output         io.Writer
+	errHandling    io.Writer
+	errHandlingSet bool
+}
+
+func (cs *CommandSet) PrintHelpInfo(info infoCode) error {
+	switch info {
+	case 0:
+		fmt.Fprintln(cs.output, cs.HelpInfo)
+	case 1:
+		fmt.Fprintln(cs.output, cs.cmd.HelpInfo)
+	default:
+		break
+	}
+	return nil
+}
+
+func (cs *CommandSet) SetErrHandling(w io.Writer) {
+	if !cs.errHandlingSet {
+		cs.errHandling = w
+		cs.errHandlingSet = true
+	}
+}
+
+type Command struct {
+	cmdFunc  func(args ...string) error
+	HelpInfo string
 }
