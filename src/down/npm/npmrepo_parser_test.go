@@ -1,4 +1,4 @@
-package down
+package npm
 
 import (
 	"testing"

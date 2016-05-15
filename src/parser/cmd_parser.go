@@ -1,6 +1,6 @@
 /*
-	Package parser provied command line parser,
-	parse vane.json file and .vanerc file for user defined.
+Package parser provied command line parser,
+parse vane.json file and .vanerc file for user defined.
 */
 package parser
 
@@ -148,6 +148,8 @@ func (cs *CommandSet) SetErrHandling(w io.Writer) {
 }
 
 type Command struct {
-	cmdFunc  func(args ...string) error
+	cmdFunc  cmdFuncT
 	HelpInfo string
 }
+
+type cmdFuncT func(args ...string) error
