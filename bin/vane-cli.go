@@ -7,11 +7,8 @@ import (
 
 func Run() error {
 	err := parser.CMDParser()
-	switch e := err.(type) {
-	case vErr.ERR_PTR_HELP_STRING:
-		return e
-	case nil:
-		break
+	if err != nil {
+		return err
 	}
 	parser.OPTParser()
 	return nil
