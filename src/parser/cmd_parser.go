@@ -8,6 +8,7 @@ import (
 	"fmt"
 	vcmd "github.com/ZhangHang-z/vane/src/commands"
 	"github.com/ZhangHang-z/vane/src/down"
+	verr "github.com/ZhangHang-z/vane/src/errors"
 	fp "github.com/ZhangHang-z/vane/src/fileparser"
 	"github.com/ZhangHang-z/vane/src/util"
 	"io"
@@ -18,19 +19,26 @@ import (
 // this function must be executed before vane option parser.
 // lefting os.Args slice (the flag starting with "-" or "--" prefix)
 // will parsed by opt_parser.go file.
-func CMDParser() {
-	var pwd []string = make([]string, 1, 10)
-	pwd[0] = os.Args[0]
-
+func CMDParser() error {
 	if len(os.Args) <= 1 || os.Args[1] == "help" && len(os.Args) == 2 {
-		fmt.Println(HelpString)
-		return
+		CommandLine.PrintHelpInfo(helpInfoAll)
+		return verr.ERR_PTR_HELP_STRING
 	}
 	cd := os.Args[1]
 
-	if !IsValidCommand(command) {
-		fmt.Println(HelpString)
+	var (
+		cdInfo string
+		ok     bool
+	)
+
+	if cdInfo, ok = vcmd.IsValidCommand(cd); !ok {
+		CommandLine.PrintHelpInfo(helpInfoAll)
+		return verr.ERR_PTR_HELP_STRING
 	}
+
+	var pwd []string = make([]string, 1, 10)
+	pwd[0] = os.Args[0]
+
 	os.Args = os.Args[2:len(os.Args)]
 	var cmdArgs []string
 	for i, v := range os.Args {
@@ -41,9 +49,9 @@ func CMDParser() {
 		os.Args = os.Args[i:] // lefting os.Args
 		break
 	}
-	os.Args = append(pwd, os.Args...)
+	os.Args = append(pwd, os.Args...) // recover command line path name self
 
-	cdFunc, cdInfo := GetCommand(cd)
+	cdFunc := GetCommand(cd)
 
 	CommandLine.cmd = &Command{
 		cmdFunc:  cdFunc,
@@ -52,11 +60,15 @@ func CMDParser() {
 	CommandLine.cmdArgs = cmdArgs
 	CommandLine.option = os.Args
 	CommandLine.cmdParsed = true
-	//ExeCommand(cd, cmdArgs)
+	return nil
 }
 
-func GetCommand(name string) (interface{}, string) {
-
+func GetCommand(name string) vcmd.CmdFunc {
+	command, ok := vcmd.VaneCommmansMap[name]
+	if ok {
+		return command
+	}
+	return nil
 }
 
 func ExeCommand(cmd string, args []string) {
@@ -114,7 +126,7 @@ var CommandLine = NewCommandSet(os.Stdout)
 func NewCommandSet(out io.Writer) *CommandSet {
 	cmd := &CommandSet{
 		output:   out,
-		HelpInfo: HelpString,
+		HelpInfo: vcmd.HelpString,
 	}
 	return cmd
 }
@@ -150,8 +162,6 @@ func (cs *CommandSet) SetErrHandling(w io.Writer) {
 }
 
 type Command struct {
-	cmdFunc  cmdFuncT
+	cmdFunc  vcmd.CmdFunc
 	HelpInfo string
 }
-
-type cmdFuncT func(args ...string) error

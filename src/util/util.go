@@ -1,6 +1,8 @@
 package util
 
 import (
+	"fmt"
+	vcmd "github.com/ZhangHang-z/vane/src/commands"
 	"net/url"
 	"os"
 )
@@ -17,4 +19,8 @@ func IsDomainName(args string) (bool, error) {
 		return false, err
 	}
 	return !(u.Scheme == ""), nil
+}
+
+func PrintHelpStringAll() {
+	fmt.Println(vcmd.HelpString)
 }
