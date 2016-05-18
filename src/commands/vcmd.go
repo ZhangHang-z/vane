@@ -2,27 +2,21 @@ package commands
 
 type CmdFunc func(args ...string) error
 
-var VaneCommmansMap = map[string]CmdFunc{
+type Commander interface {
+	Execute(args ...string) error
+	RollBack() error
+}
+
+var VaneCommmans = map[string]Commander{
 	"install":   Install,
 	"info":      Info,
 	"uninstall": uninstall,
 }
 
-var VaneCommandUsage = []VaneCommand{
-	{"install", "install the packages."},
-	{"info", "get package infomations."},
-	{"uninstall", "uninstall saved package from vane package directory."},
-}
-
-type VaneCommand struct {
-	Name        string
-	Description string
-}
-
-func IsValidCommand(command string) (string, bool) {
-	cmd, hasAttr := VaneCommandUsage[command]
-	if hasAttr {
-		return cmd.Description, true
+func IsValidCommand(cmd string) (string, bool) {
+	command, ok := VaneCommands[cmd]
+	if ok {
+		return command.Usage, true
 	}
 	return "", false
 }

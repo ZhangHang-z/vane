@@ -6,12 +6,31 @@ import (
 	fp "github.com/ZhangHang-z/vane/src/fileparser"
 )
 
-func Install(args ...string) error {
-	if len(args) == 0 {
-		InstallFromJsonFile()
+var Install *tInstall = newInstall()
+
+func newInstall() *tInstall {
+	return &tInstall{
+		Name:  "install",
+		Usage: "Install a pakcage into pkg-directory by given name.",
 	}
 }
 
-func InstallFromJsonFile() {
+type tInstall struct {
+	Name  string
+	Usage string
+}
+
+func (i *tInstall) Execute(args ...string) error {
+	if len(args) == 0 {
+		InstallFromJsonFile()
+	}
+	return nil
+}
+
+func (i *tInstall) RollBack() error {
+	return nil
+}
+
+func (i *tInstall) InstallFromJsonFile() {
 	fj := fp.ParseJSONFile()
 }

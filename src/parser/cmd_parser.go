@@ -13,6 +13,7 @@ import (
 	"github.com/ZhangHang-z/vane/src/util"
 	"io"
 	"os"
+	"strings"
 )
 
 // CMDParser parse the command line arguments and execute vane's commands.
@@ -24,14 +25,14 @@ func CMDParser() error {
 		CommandLine.PrintHelpInfo(helpInfoAll)
 		return verr.ERR_PTR_HELP_STRING
 	}
-	cd := os.Args[1]
+	cdName := strings.ToLower(os.Args[1])
 
 	var (
 		cdInfo string
 		ok     bool
 	)
 
-	if cdInfo, ok = vcmd.IsValidCommand(cd); !ok {
+	if cdInfo, ok = vcmd.IsValidCommand(cdName); !ok {
 		CommandLine.PrintHelpInfo(helpInfoAll)
 		return verr.ERR_PTR_HELP_STRING
 	}
@@ -51,23 +52,13 @@ func CMDParser() error {
 	}
 	os.Args = append(pwd, os.Args...) // recover command line path name self
 
-	cdFunc := GetCommand(cd)
-
 	CommandLine.cmd = &Command{
-		cmdFunc:  cdFunc,
+		cmdFunc:  cdName,
 		HelpInfo: cdInfo,
 	}
 	CommandLine.cmdArgs = cmdArgs
 	CommandLine.option = os.Args
 	CommandLine.cmdParsed = true
-	return nil
-}
-
-func GetCommand(name string) vcmd.CmdFunc {
-	command, ok := vcmd.VaneCommmansMap[name]
-	if ok {
-		return command
-	}
 	return nil
 }
 
@@ -132,7 +123,7 @@ func NewCommandSet(out io.Writer) *CommandSet {
 }
 
 type CommandSet struct {
-	cmd            *Command
+	cmd            Command
 	cmdArgs        []string
 	cmdParsed      bool
 	option         string
@@ -162,6 +153,6 @@ func (cs *CommandSet) SetErrHandling(w io.Writer) {
 }
 
 type Command struct {
-	cmdFunc  vcmd.CmdFunc
+	Name     string
 	HelpInfo string
 }
