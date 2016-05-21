@@ -1,9 +1,10 @@
 package commands
 
 import (
-	"archive/tar"
-	"github.com/ZhangHang-z/vane/src/down"
+	//"archive/tar"
+	"fmt"
 	fp "github.com/ZhangHang-z/vane/src/fileparser"
+	"github.com/ZhangHang-z/vane/src/verrors"
 )
 
 var Install *tInstall = newInstall()
@@ -22,7 +23,7 @@ type tInstall struct {
 
 func (i *tInstall) Execute(args ...string) error {
 	if len(args) == 0 {
-		InstallFromJsonFile()
+		i.InstallFromJsonFile()
 	}
 	return nil
 }
@@ -31,6 +32,27 @@ func (i *tInstall) RollBack() error {
 	return nil
 }
 
-func (i *tInstall) InstallFromJsonFile() {
-	fj := fp.ParseJSONFile()
+func (i *tInstall) InstallFromJsonFile() error {
+	vj := new(fp.VaneJSON)
+
+	err := vj.Read()
+	if err != nil {
+		return err
+	}
+
+	if vj.Dependencies != nil {
+		deps := vj.ReadPackages(vj.Dependencies)
+		for i, v := range deps {
+			fmt.Println(i, v.Name)
+		}
+	}
+
+	if vj.Dependencies != nil {
+		devDeps := vj.ReadPackages(vj.DevDependcies)
+		for i, v := range devDeps {
+			fmt.Println(i, v.Name)
+		}
+	}
+
+	return nil
 }

@@ -1,5 +1,10 @@
 package commands
 
+import (
+	"fmt"
+	"net/url"
+)
+
 type CmdFunc func(args ...string) error
 
 type Commander interface {
@@ -7,18 +12,8 @@ type Commander interface {
 	RollBack() error
 }
 
-var VaneCommmans = map[string]Commander{
-	"install":   Install,
-	"info":      Info,
-	"uninstall": uninstall,
-}
-
-func IsValidCommand(cmd string) (string, bool) {
-	command, ok := VaneCommands[cmd]
-	if ok {
-		return command.Usage, true
-	}
-	return "", false
+var VaneCommands = map[string]Commander{
+	"install": Install,
 }
 
 var HelpString = `
@@ -35,3 +30,16 @@ Commands:
 Options:
 	--save		save the package name into vane.json file.
 `
+
+// IsDomainName inspect url is a domain name or a name of package.
+func IsDomainName(args string) (bool, error) {
+	u, err := url.Parse(args)
+	if err != nil {
+		return false, err
+	}
+	return !(u.Scheme == ""), nil
+}
+
+func PrintHelpStringAll() {
+	fmt.Println(HelpString)
+}

@@ -2,10 +2,14 @@ package dir
 
 import (
 	"errors"
-	"github.com/ZhangHang-z/vane/src/util"
 	"log"
 	"os"
 	"path/filepath"
+)
+
+const (
+	ModeCommonDir  os.FileMode = 0775 // unix common user's directory default permission.
+	ModeCommonFile os.FileMode = 0664 // unix common user's file default permission.
 )
 
 const (
@@ -24,7 +28,7 @@ func DirIsExist(dirName string) bool {
 
 // MkSavedDir create the default direatory which name is "vane_components".
 func MkSavedDir(dirName string) error {
-	err := os.MkdirAll(dirName, util.ModeCommonDir)
+	err := os.MkdirAll(dirName, ModeCommonDir)
 	if err != nil {
 		return ERR_MK_SAVE_DIR
 	}
