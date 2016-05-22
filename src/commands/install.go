@@ -1,38 +1,42 @@
 package commands
 
 import (
-	//"archive/tar"
 	"fmt"
+	"github.com/ZhangHang-z/vane/src/down/npm"
+	//"github.com/ZhangHang-z/vane/src/errors"
 	fp "github.com/ZhangHang-z/vane/src/fileparser"
-	"github.com/ZhangHang-z/vane/src/verrors"
 )
 
-var Install *tInstall = newInstall()
+var Install *tpInstall = newInstall()
 
-func newInstall() *tInstall {
-	return &tInstall{
+// newInstall return a pointer receiver of type tpInstall.
+func newInstall() *tpInstall {
+	return &tpInstall{
 		Name:  "install",
 		Usage: "Install a pakcage into pkg-directory by given name.",
 	}
 }
 
-type tInstall struct {
+// tpInstall used for store command name and usage infomation.
+type tpInstall struct {
 	Name  string
 	Usage string
 }
 
-func (i *tInstall) Execute(args ...string) error {
+// Execute execute install command.
+func (i *tpInstall) Execute(args ...string) error {
 	if len(args) == 0 {
-		i.InstallFromJsonFile()
+		i.InstallFromJSONFile()
 	}
 	return nil
 }
 
-func (i *tInstall) RollBack() error {
+func (i *tpInstall) RollBack() error {
 	return nil
 }
 
-func (i *tInstall) InstallFromJsonFile() error {
+// InstallFromJSONFile just install packages from vane.json file.
+func (i *tpInstall) InstallFromJSONFile() error {
 	vj := new(fp.VaneJSON)
 
 	err := vj.Read()
@@ -42,17 +46,32 @@ func (i *tInstall) InstallFromJsonFile() error {
 
 	if vj.Dependencies != nil {
 		deps := vj.ReadPackages(vj.Dependencies)
-		for i, v := range deps {
-			fmt.Println(i, v.Name)
+		for _, dep := range deps {
+			StaringInstall(dep.Name, dev.Version)
 		}
 	}
 
-	if vj.Dependencies != nil {
-		devDeps := vj.ReadPackages(vj.DevDependcies)
-		for i, v := range devDeps {
-			fmt.Println(i, v.Name)
+	if vj.DevDependencies != nil {
+		devDeps := vj.ReadPackages(vj.DevDependencies)
+		for _, dev := range devDeps {
+			StaringInstall(dev.Name, dev.Version)
 		}
 	}
 
+	return nil
+}
+
+func StaringInstall(name, version string) error {
+	defer func() {
+		if r := recover(); r != nil {
+			fmt.Println(r)
+		}
+	}()
+
+	url := npm.GetNPMRegistryURL(name)
+	npmRepo := npm.NPMRegistryInit(url)
+	npmDist := npmRepo.ChooseOneDist(version)
+
+	fmt.Println(npmDist.Tarball, npmDist.Shasum)
 	return nil
 }

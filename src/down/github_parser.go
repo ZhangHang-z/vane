@@ -4,7 +4,7 @@ import (
 	"archive/zip"
 	"fmt"
 	"github.com/ZhangHang-z/vane/src/dir"
-	"github.com/ZhangHang-z/vane/src/verrors"
+	"github.com/ZhangHang-z/vane/src/errors"
 	"io"
 	"io/ioutil"
 	"log"
@@ -67,7 +67,7 @@ func RevGithubPKG(url string) ([]byte, error) {
 	}
 	defer res.Body.Close()
 	if res.StatusCode == 404 {
-		return nil, verrors.ERR_HTTP_NOT_FOUND
+		return nil, errors.ERR_HTTP_NOT_FOUND
 	}
 	if err != nil {
 		return nil, err

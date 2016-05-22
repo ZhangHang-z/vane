@@ -4,7 +4,8 @@ import (
 	"testing"
 )
 
-func TestGetNPMRegistry(t *testing.T) {
+func TestNPMRegistryInit(t *testing.T) {
 	url := "http://registry.npmjs.com/vue"
-	GetNPMRegistry(url)
+	npmRepo := NPMRegistryInit(url)
+	npmRepo.PrintAvailableVersions()
 }

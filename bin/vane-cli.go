@@ -1,7 +1,6 @@
 package main
 
 import (
-	vErr "github.com/ZhangHang-z/vane/src/errors"
 	"github.com/ZhangHang-z/vane/src/parser"
 )
 

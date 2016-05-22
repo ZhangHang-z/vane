@@ -1,7 +1,7 @@
 package dir
 
 import (
-	"errors"
+	"github.com/ZhangHang-z/vane/src/errors"
 	"log"
 	"os"
 	"path/filepath"

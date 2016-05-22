@@ -8,9 +8,8 @@ import (
 	"fmt"
 	vcmd "github.com/ZhangHang-z/vane/src/commands"
 	"github.com/ZhangHang-z/vane/src/down"
+	"github.com/ZhangHang-z/vane/src/errors"
 	fp "github.com/ZhangHang-z/vane/src/fileparser"
-	"github.com/ZhangHang-z/vane/src/util"
-	verr "github.com/ZhangHang-z/vane/src/verrors"
 	"io"
 	"os"
 	"strings"
@@ -23,7 +22,7 @@ import (
 func CMDParser() error {
 	if len(os.Args) <= 1 || os.Args[1] == "help" && len(os.Args) == 2 {
 		CommandLine.PrintHelpInfo(helpInfoAll)
-		return verr.ERR_PTR_HELP_STRING
+		return errors.ERR_PTR_HELP_STRING
 	}
 	cdName := strings.ToLower(os.Args[1])
 
@@ -34,7 +33,7 @@ func CMDParser() error {
 
 	if cdInfo, ok = vcmd.IsValidCommand(cdName); !ok {
 		CommandLine.PrintHelpInfo(helpInfoAll)
-		return verr.ERR_PTR_HELP_STRING
+		return errors.ERR_PTR_HELP_STRING
 	}
 
 	var pwd []string = make([]string, 1, 10)

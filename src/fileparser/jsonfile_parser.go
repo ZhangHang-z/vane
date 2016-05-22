@@ -2,8 +2,9 @@ package fileparser
 
 import (
 	"encoding/json"
-	"errors"
+	"github.com/ZhangHang-z/vane/src/errors"
 	"io/ioutil"
+	"regexp"
 )
 
 var (
@@ -17,27 +18,29 @@ const (
 )
 
 type VaneJSON struct {
-	Directory     string            `json:"directory,omitempty"`
-	Timeout       int               `json:"timeout,omitempty"`
-	Dependencies  map[string]string `json:"dependencies,omitempty"`
-	DevDependcies map[string]string `json:"devDependencies,omitempty"`
+	Directory       string            `json:"directory,omitempty"`
+	Timeout         int               `json:"timeout,omitempty"`
+	Dependencies    map[string]string `json:"dependencies,omitempty"`
+	DevDependencies map[string]string `json:"devDependencies,omitempty"`
 }
 
 func (v *VaneJSON) Read() error {
 	stream, err := ioutil.ReadFile(JSON_FILE_NAME)
 	if err != nil {
-		return err
+		return ERR_JSON_FILE_NOT_FOUND
 	}
 	err = json.Unmarshal(stream, v)
 	if err != nil {
-		return err
+		return ERR_JSON_FILE_CONF
 	}
 	return nil
 }
 
+// ReadPackages read the given map that might be VaneJSON.Dependencies or VaneJSON.DebDependencies.
 func (v *VaneJSON) ReadPackages(pkgs map[string]string) []PackageInfo {
 	var deps []PackageInfo
 	for k, v := range pkgs {
+		v = GetVersionInfo(v)
 		deps = append(deps, PackageInfo{k, v})
 	}
 	return deps
@@ -71,4 +74,13 @@ func (v *VaneJSON) writeToDepend() error {
 
 func (v *VaneJSON) writeToDevDepend() error {
 	return nil
+}
+
+const (
+	RegPackageVersion = `\d+\.\d+(\.\d+.*)?` // will match, e.g. 1.1.1, 1.11.1, 1.2, 111.0.1, 1.0.0-alpha.7
+)
+
+func GetVersionInfo(raw string) string {
+	re := regexp.MustCompile(RegPackageVersion)
+	return re.FindString(raw)
 }

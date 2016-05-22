@@ -1,9 +1,9 @@
 package parser
 
 import (
-	"errors"
 	"flag"
 	"fmt"
+	"github.com/ZhangHang-z/vane/src/errors"
 	"github.com/ZhangHang-z/vane/src/vflag"
 	"os"
 	"strings"

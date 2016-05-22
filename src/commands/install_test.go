@@ -6,6 +6,6 @@ import (
 )
 
 func TestInstallFromJsonFile(t *testing.T) {
-	err := Install.InstallFromJsonFile()
+	err := Install.InstallFromJSONFile()
 	fmt.Println(err)
 }

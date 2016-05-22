@@ -11,7 +11,7 @@ func TestOpenRCFile(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-	fmt.Println(vanerc)
+	fmt.Println(".vanerc", vanerc)
 }
 
 func TestMkSavedDirAndIn(t *testing.T) {

@@ -2,8 +2,8 @@ package fileparser
 
 import (
 	"encoding/json"
-	"errors"
 	"github.com/ZhangHang-z/vane/src/dir"
+	"github.com/ZhangHang-z/vane/src/errors"
 	"io/ioutil"
 	"os"
 	"path"
