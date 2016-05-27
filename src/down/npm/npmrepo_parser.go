@@ -48,11 +48,16 @@ type NpmDist struct {
 	Shasum  string
 }
 
-func (npm *NpmRepo) ChooseOneDist(version string) NpmDist {
+func (npm *NpmRepo) ChooseDist(version string) NpmDist {
 	if nmpv, ok := npm.Versions[version]; ok {
 		return nmpv.Dist
 	}
 	panic("Package has not this version.")
+}
+
+func (npm *NpmRepo) GetLetestDist() NpmDist {
+	latest := npm.DistTags.Latest
+	return npm.ChooseDist(latest)
 }
 
 // PrintAvailableVersions print each version and omit experiment versions.

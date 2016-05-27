@@ -10,7 +10,3 @@ func TestRveContentsFromLink(t *testing.T) {
 		t.Error(err)
 	}
 }
-
-func TestExtractTarArchive(t *testing.T) {
-
-}

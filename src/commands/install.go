@@ -27,12 +27,8 @@ type tpInstall struct {
 // Execute execute install command.
 func (i *tpInstall) Execute(args ...string) error {
 	if len(args) == 0 {
-		i.InstallFromJSONFile()
+		return i.InstallFromJSONFile()
 	}
-	return nil
-}
-
-func (i *tpInstall) RollBack() error {
 	return nil
 }
 
@@ -46,40 +42,53 @@ func (i *tpInstall) InstallFromJSONFile() error {
 		return err
 	}
 
+	if err = fp.MkSavedDirAndIn(); err != nil {
+		return err
+	}
+
 	if vj.Dependencies != nil {
 		deps := vj.ReadPackages(vj.Dependencies)
 		for _, dep := range deps {
-			StaringInstallAuto(dep.Name, dep.Version)
+			InstallByVersion(dep.Name, dep.Version)
 		}
 	}
 
 	if vj.DevDependencies != nil {
 		devDeps := vj.ReadPackages(vj.DevDependencies)
 		for _, dev := range devDeps {
-			StaringInstallAuto(dev.Name, dev.Version)
+			InstallByVersion(dev.Name, dev.Version)
 		}
 	}
 
 	return nil
 }
 
-func StaringInstallAuto(name, version string) error {
+func InstallByVersion(name, version string) {
 	defer func() {
 		if info := recover(); info != nil {
 			fmt.Println(info)
 		}
 	}()
-
 	url := npm.GetNPMRegistryURL(name)
 	npmRepo := npm.NPMRegistryInit(url)
-	npmDist := npmRepo.ChooseOneDist(version)
+	npmDist := npmRepo.ChooseDist(version)
+	StaringInstallAuto(npmDist.Tarball)
+}
 
-	contents, err := down.RveContentsFromLink(npmDist.Tarball)
+func InstallLatestVersion(name string) {
+	url := npm.GetNPMRegistryURL(name)
+	npmRepo := npm.NPMRegistryInit(url)
+	npmDist := npmRepo.GetLatestVersion()
+	StaringInstallAuto(npmDist.Tarball)
+}
+
+func StaringInstallAuto(tarBall string) error {
+	contents, err := down.RveContentsFromLink(tarBall)
 	if err != nil {
 		return err
 	}
 
-	err = down.ExtractTarArchive(contents)
+	err = down.ExtractTarArchive(name, contents)
 	if err != nil {
 		log.Println(err)
 	}

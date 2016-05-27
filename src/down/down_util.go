@@ -3,7 +3,7 @@ package down
 import (
 	"archive/tar"
 	"bytes"
-	"fmt"
+	"compress/gzip"
 	"github.com/ZhangHang-z/vane/src/dir"
 	"github.com/ZhangHang-z/vane/src/errors"
 	"io"
@@ -11,6 +11,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 )
 
 // RevContentsFromLink retrieve package from a given link.
@@ -27,9 +28,10 @@ func RveContentsFromLink(link string) ([]byte, error) {
 }
 
 // ExtractTarArchive extract the tar file from memory.
-func ExtractTarArchive(contents []byte) error {
+func ExtractTarArchive(tarName string, contents []byte) error {
 	r := bytes.NewReader(contents)
-	tr := tar.NewReader(r)
+	gz, _ := gzip.NewReader(r)
+	tr := tar.NewReader(gz)
 
 	for {
 		hdr, err := tr.Next()
@@ -40,24 +42,22 @@ func ExtractTarArchive(contents []byte) error {
 			return err
 		}
 
-		// if is a directory just create.
-		fi := hdr.FileInfo()
-		if fi.IsDir() {
-			if err := os.MkdirAll(fi.Name(), dir.ModeCommonDir); err != nil {
-				log.Printf("Create directory <%s> failed", fi.Name())
-			}
-			continue
+		nameList := strings.Split(hdr.Name, "/")
+		nameList[0] = tarName
+		hdr.Name = strings.Join(nameList, "/")
+
+		err = dir.ParseDirAndMake(hdr.Name)
+		if err != nil {
+			log.Println(err)
 		}
 
 		// copy extracted contents to file.
 		toFile, err := os.Create(hdr.Name)
-		defer toFile.Close()
 		if err != nil {
 			log.Printf("Create file <%s> failed", hdr.Name)
 			continue
 		}
-
-		fmt.Println("extract file:", hdr.Name)
+		defer toFile.Close()
 		if _, err := io.Copy(toFile, tr); err != nil {
 			log.Println(err)
 		}

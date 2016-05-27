@@ -4,6 +4,7 @@ import (
 	"github.com/ZhangHang-z/vane/src/errors"
 	"log"
 	"os"
+	"path"
 	"path/filepath"
 )
 
@@ -43,4 +44,12 @@ func GotoComponentsDir(dirComponents string) {
 	}
 	os.Chdir(absDir)
 	return
+}
+
+func ParseDirAndMake(name string) error {
+	dirName := path.Dir(name)
+	if !DirIsExist(dirName) {
+		os.MkdirAll(dirName, ModeCommonDir)
+	}
+	return nil
 }

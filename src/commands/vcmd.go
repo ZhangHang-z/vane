@@ -9,7 +9,6 @@ type CmdFunc func(args ...string) error
 
 type Commander interface {
 	Execute(args ...string) error
-	RollBack() error
 }
 
 var VaneCommands = map[string]Commander{
