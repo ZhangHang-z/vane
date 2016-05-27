@@ -1,4 +1,4 @@
-#!/usr/env sh
+#!/bin/sh
 
 echo "installing vane package manager"
 
@@ -11,4 +11,5 @@ else
 		echo "error: install vane-cli failed"
 	else
 		ln -s /usr/bin/vane $GOPATH/bin/vane-cli
+	fi
 fi

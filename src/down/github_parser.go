@@ -4,11 +4,9 @@ import (
 	"archive/zip"
 	"fmt"
 	"github.com/ZhangHang-z/vane/src/dir"
-	"github.com/ZhangHang-z/vane/src/errors"
 	"io"
 	"io/ioutil"
 	"log"
-	"net/http"
 	"net/url"
 	"os"
 	"strings"
@@ -57,22 +55,6 @@ func GetPKGNameAndTag(paths []string) (pkgName, pkgTag string) {
 		return paths[0], paths[lens-1]
 	}
 	return paths[0], ""
-}
-
-// RevGithubPKG retrieve package from a given url.
-func RevGithubPKG(url string) ([]byte, error) {
-	res, err := http.Get(url)
-	if err != nil {
-		return nil, err
-	}
-	defer res.Body.Close()
-	if res.StatusCode == 404 {
-		return nil, errors.ERR_HTTP_NOT_FOUND
-	}
-	if err != nil {
-		return nil, err
-	}
-	return ioutil.ReadAll(res.Body)
 }
 
 // ExtractZip extract a zip file from a temporary file.
@@ -133,7 +115,7 @@ func CreateTempFile(rawContents []byte) (*os.File, error) {
 
 // GitHubDownloader retrieve file and extract.
 func GitHubDownloader(url string) error {
-	contents, err := RevGithubPKG(url)
+	contents, err := RveContentsFromLink(url)
 	if err != nil {
 		return err
 	}

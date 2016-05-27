@@ -2,9 +2,10 @@ package commands
 
 import (
 	"fmt"
+	"github.com/ZhangHang-z/vane/src/down"
 	"github.com/ZhangHang-z/vane/src/down/npm"
-	//"github.com/ZhangHang-z/vane/src/errors"
 	fp "github.com/ZhangHang-z/vane/src/fileparser"
+	"log"
 )
 
 var Install *tpInstall = newInstall()
@@ -39,6 +40,7 @@ func (i *tpInstall) RollBack() error {
 func (i *tpInstall) InstallFromJSONFile() error {
 	vj := new(fp.VaneJSON)
 
+	// read the json file.
 	err := vj.Read()
 	if err != nil {
 		return err
@@ -47,24 +49,24 @@ func (i *tpInstall) InstallFromJSONFile() error {
 	if vj.Dependencies != nil {
 		deps := vj.ReadPackages(vj.Dependencies)
 		for _, dep := range deps {
-			StaringInstall(dep.Name, dev.Version)
+			StaringInstallAuto(dep.Name, dep.Version)
 		}
 	}
 
 	if vj.DevDependencies != nil {
 		devDeps := vj.ReadPackages(vj.DevDependencies)
 		for _, dev := range devDeps {
-			StaringInstall(dev.Name, dev.Version)
+			StaringInstallAuto(dev.Name, dev.Version)
 		}
 	}
 
 	return nil
 }
 
-func StaringInstall(name, version string) error {
+func StaringInstallAuto(name, version string) error {
 	defer func() {
-		if r := recover(); r != nil {
-			fmt.Println(r)
+		if info := recover(); info != nil {
+			fmt.Println(info)
 		}
 	}()
 
@@ -72,6 +74,15 @@ func StaringInstall(name, version string) error {
 	npmRepo := npm.NPMRegistryInit(url)
 	npmDist := npmRepo.ChooseOneDist(version)
 
-	fmt.Println(npmDist.Tarball, npmDist.Shasum)
+	contents, err := down.RveContentsFromLink(npmDist.Tarball)
+	if err != nil {
+		return err
+	}
+
+	err = down.ExtractTarArchive(contents)
+	if err != nil {
+		log.Println(err)
+	}
+
 	return nil
 }
