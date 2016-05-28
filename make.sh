@@ -1,15 +1,16 @@
-#!/bin/sh
+#!/usr/bin/env bash
+
+vanecli='./bin/vane-cli.go'
 
 echo "installing vane package manager"
 
-if type go 2> /dev/null; then 
+if hash go; then 
 	echo "error: make sure you have golang installed"
 	exit 1
 else
-	cd "./bin"
-	if go install vane-cli.go 2> /dev/null; then 
-		echo "error: install vane-cli failed"
+	if [ `go install "$vanecli"` ]; then
+		ln -s /usr/bin/vane "$GOPATH/bin/vane-cli.exe"
 	else
-		ln -s /usr/bin/vane $GOPATH/bin/vane-cli
+		echo "error: install vane failed"
 	fi
 fi

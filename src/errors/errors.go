@@ -13,6 +13,6 @@ func (err *vaneError) Error() string {
 }
 
 var (
-	ERR_HTTP_NOT_FOUND  = New("Package Not Found")
+	ERR_HTTP_NOT_FOUND  = New("404: Package Not Found")
 	ERR_PTR_HELP_STRING = New("This error for print some help string, usually omit it.")
 )

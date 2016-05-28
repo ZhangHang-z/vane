@@ -3,28 +3,32 @@ package npm
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/ZhangHang-z/vane/src/errors"
 	"io/ioutil"
 	"net/http"
 	"regexp"
 	"sort"
 )
 
-func NPMRegistryInit(url string) *NpmRepo {
+func NPMRegistryInit(url string) (*NpmRepo, error) {
 	resp, err := http.Get(url)
-	if err != nil {
-		return nil
-	}
 	defer resp.Body.Close()
+	if err != nil {
+		return nil, err
+	}
+	if resp.StatusCode == 404 {
+		return nil, errors.ERR_HTTP_NOT_FOUND
+	}
 
 	rawJson, _ := ioutil.ReadAll(resp.Body)
 
 	var npmRepo NpmRepo
 	err = json.Unmarshal(rawJson, &npmRepo)
 	if err != nil {
-		return nil
+		return nil, err
 	}
 
-	return &npmRepo
+	return &npmRepo, nil
 }
 
 type NpmRepo struct {
@@ -52,10 +56,10 @@ func (npm *NpmRepo) ChooseDist(version string) NpmDist {
 	if nmpv, ok := npm.Versions[version]; ok {
 		return nmpv.Dist
 	}
-	panic("Package has not this version.")
+	panic("Package has not this version")
 }
 
-func (npm *NpmRepo) GetLetestDist() NpmDist {
+func (npm *NpmRepo) GetLatestDist() NpmDist {
 	latest := npm.DistTags.Latest
 	return npm.ChooseDist(latest)
 }

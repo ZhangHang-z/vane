@@ -2,14 +2,15 @@ package fileparser
 
 import (
 	"encoding/json"
+	"github.com/ZhangHang-z/vane/src/dir"
 	"github.com/ZhangHang-z/vane/src/errors"
 	"io/ioutil"
 	"regexp"
 )
 
 var (
-	ERR_JSON_FILE_NOT_FOUND = errors.New("vane.json file not found.")
-	ERR_JSON_FILE_CONF      = errors.New("vane.json file configuration error.")
+	ERR_JSON_FILE_NOT_FOUND = errors.New("vane.json file not found")
+	ERR_JSON_FILE_CONF      = errors.New("bad vane.json configuration")
 )
 
 const (
@@ -18,17 +19,21 @@ const (
 )
 
 type VaneJSON struct {
-	Directory       string            `json:"directory,omitempty"`
-	Timeout         int               `json:"timeout,omitempty"`
+	Directory       string            `json:"directory,-"`
+	Timeout         int               `json:"timeout,-"`
 	Dependencies    map[string]string `json:"dependencies,omitempty"`
 	DevDependencies map[string]string `json:"devDependencies,omitempty"`
 }
 
 func (v *VaneJSON) Read() error {
+	// make sure it has a name, it not in json file, then using default name.
+	v.Directory = dir.DefaultDirName
+
 	stream, err := ioutil.ReadFile(JSON_FILE_NAME)
 	if err != nil {
 		return ERR_JSON_FILE_NOT_FOUND
 	}
+
 	err = json.Unmarshal(stream, v)
 	if err != nil {
 		return ERR_JSON_FILE_CONF

@@ -2,10 +2,8 @@ package fileparser
 
 import (
 	"encoding/json"
-	"github.com/ZhangHang-z/vane/src/dir"
 	"github.com/ZhangHang-z/vane/src/errors"
 	"io/ioutil"
-	"os"
 	"path"
 )
 
@@ -50,39 +48,4 @@ func RsvRCFile(rcfpath string) (*VaneRC, error) {
 		return &VaneRC{}, ERR_RC_FILE_NOT_FOUND
 	}
 	return RsvJSONFromRCFile(contents)
-}
-
-// MkSavedDirAndIn make the package saved directory and in.
-func MkSavedDirAndIn() error {
-	cwd, err := os.Getwd()
-	if err != nil {
-		return err
-	}
-	vanerc, err := RsvRCFile(cwd)
-	if err != nil {
-		if err == ERR_RC_FILE_NOT_FOUND {
-			vanerc.Directory = dir.DefaultDirName
-		}
-	}
-
-	// default package saved directory.
-	if vanerc.Directory == dir.DefaultDirName {
-		if !dir.DirIsExist(vanerc.Directory) {
-			err := dir.MkSavedDir(vanerc.Directory)
-			if err != nil {
-				return errors.New("make default package saved directory <vane_components> failed.")
-			}
-		}
-	}
-
-	// user defined package saved directory from .vanerc file.
-	if !dir.DirIsExist(vanerc.Directory) {
-		err := dir.MkSavedDir(vanerc.Directory)
-		if err != nil {
-			return err
-		}
-	}
-
-	dir.GotoComponentsDir(vanerc.Directory)
-	return nil
 }

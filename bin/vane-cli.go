@@ -9,7 +9,6 @@ func Run() error {
 	if err != nil {
 		return err
 	}
-	parser.OPTParser()
 	return nil
 }
 

@@ -53,3 +53,20 @@ func ParseDirAndMake(name string) error {
 	}
 	return nil
 }
+
+// MkSavedDirAndIn make the directory and in.
+func MkSavedDirAndIn(dir string) error {
+	_, err := os.Getwd()
+	if err != nil {
+		return err
+	}
+
+	if !DirIsExist(dir) {
+		if err := MkSavedDir(dir); err != nil {
+			return err
+		}
+	}
+
+	GotoComponentsDir(dir)
+	return nil
+}

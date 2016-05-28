@@ -37,14 +37,9 @@ var ArgPkgs Pkgs
 var Save bool
 var SaveDev bool
 
-func printHelpString() {
-	fmt.Println(HelpString)
-}
-
 func OPTParser() {
 	flag.Usage = func() {
 		fmt.Fprintf(os.Stdout, "Usage of %s:\n", "vane")
-		printHelpString()
 	}
 
 	flag.BoolVar(&ArgIsOpt, "save-dev", defaultSave, "--save....")
