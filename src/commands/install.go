@@ -129,7 +129,7 @@ func StaringInstallAuto(name, tarBall string) error {
 	if err != nil {
 		log.Println(err)
 	}
-	log.Println("install %s successful", name)
+	log.Printf("install %s successful", name)
 
 	return nil
 }
