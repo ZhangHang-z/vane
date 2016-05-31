@@ -18,13 +18,13 @@ import (
 // will parsed by opt_parser.go file.
 func CMDParser() error {
 	if len(os.Args) <= 1 || os.Args[1] == "help" && len(os.Args) == 2 {
-		log.Println(GenHelpInfo())
+		log.Println(vcmd.GetHelpInfo())
 		return errors.ERR_PTR_HELP_STRING
 	}
 	cdName := strings.ToLower(os.Args[1])
 
-	if _, ok := Usage[cdName]; !ok {
-		log.Println(GenHelpInfo())
+	if _, ok := vcmd.Usage[cdName]; !ok {
+		log.Println(vcmd.GetHelpInfo())
 		return errors.ERR_PTR_HELP_STRING
 	}
 
@@ -50,9 +50,9 @@ func CMDParser() error {
 func executeCommand(cmd string, args []string) error {
 	switch cmd {
 	case "install":
-		return vcmd.Install.Execute(args...)
+		return vcmd.Install(args...)
 	case "info":
-		log.Println("commmand info missed.")
+		return vcmd.Info(args...)
 	}
 	return nil
 }

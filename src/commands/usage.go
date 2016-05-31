@@ -1,4 +1,4 @@
-package parser
+package commands
 
 import (
 	"fmt"
@@ -24,7 +24,7 @@ Options:
 	--save		save the package name into vane.json file
 `
 
-func GenHelpInfo() string {
+func GetHelpInfo() string {
 	var s = "Commands:\n"
 	for name, usage := range Usage {
 		s = s + fmt.Sprintf("\t%s\t%s\n", name, usage)

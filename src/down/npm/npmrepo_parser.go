@@ -65,7 +65,7 @@ func (npm *NpmRepo) GetLatestDist() NpmDist {
 }
 
 // PrintAvailableVersions print each version and omit experiment versions.
-func (npm NpmRepo) PrintAvailableVersions() {
+func (npm *NpmRepo) PrintAvailableVersions() {
 	fmt.Println("Available Versions:")
 	if npm.Versions != nil {
 		var list []string

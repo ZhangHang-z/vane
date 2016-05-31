@@ -8,14 +8,13 @@ import (
 	"log"
 )
 
-var Install *tpInstall = newInstall()
-
-// newInstall return a pointer receiver of type tpInstall.
-func newInstall() *tpInstall {
-	return &tpInstall{
+// Install used for install packages.
+var Install = func(args ...string) error {
+	i := &tpInstall{
 		Name:      "install",
 		JSONExist: true,
 	}
+	return i.Execute(args...)
 }
 
 // tpInstall used for store command name and usage infomation.
